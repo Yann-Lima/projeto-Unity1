@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 61577452}
   - component: {fileID: 61577451}
   - component: {fileID: 61577453}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,7 +518,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -589,6 +589,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   livs: 3
+  isGrounded: 0
+  isMooving: 0
+  isImmune: 0
+  speed: 5
+  jumpForce: 7
+  movHor: 0
+  immuneTimeCnt: 0
+  immuneTime: 0.5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  radius: 0.3
+  groundRayDist: 0.55
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

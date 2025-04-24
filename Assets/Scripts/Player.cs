@@ -34,15 +34,31 @@ public class Player : MonoBehaviour
     // Start is called beafore the fisrt frame
     void Start(){
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        spr = GetComponent<SpriteRenderer>();
     }
 
     //Update is called once per frame
     void Update(){
         movHor = Input.GetAxisRaw("Horizontal");
+
+        isMooving = (movHor != 0f);
+
+        isGrounded = Physics2D.CircleCast(transform.position, radius, Vector3.down, groundRayDist, groundLayer);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        jump();
     }
 
     void FixedUpdate(){
+        rb.linearVelocity = new Vector2(movHor * speed, rb.linearVelocity.y);
+    }
 
+    public void jump(){
+        if (!isGrounded) return;
+
+        rb.linearVelocity = Vector2.up * jumpForce;
+        
     }
 
     void onDestroy(){
