@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class Player : MonoBehaviour
-
 {
     public static Player obj;
     public int livs = 3;
@@ -21,7 +20,6 @@ public class Player : MonoBehaviour
     public float radius = 0.3f;
     public float groundRayDist = 0.5f;
 
-
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer spr;
@@ -30,24 +28,27 @@ public class Player : MonoBehaviour
         obj = this;
     }
 
-    
-    // Start is called beafore the fisrt frame
+    // Start is called before the first frame
     void Start(){
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
     }
 
-    //Update is called once per frame
+    // Update is called once per frame
     void Update(){
         movHor = Input.GetAxisRaw("Horizontal");
-
         isMooving = (movHor != 0f);
 
         isGrounded = Physics2D.CircleCast(transform.position, radius, Vector3.down, groundRayDist, groundLayer);
 
         if (Input.GetKeyDown(KeyCode.Space))
-        jump();
+            jump();
+
+            anim.SetBool("isMooving", isMooving);
+            anim.SetBool("isGrounded", isGrounded);
+
+        flip(movHor);
     }
 
     void FixedUpdate(){
@@ -56,12 +57,20 @@ public class Player : MonoBehaviour
 
     public void jump(){
         if (!isGrounded) return;
-
         rb.linearVelocity = Vector2.up * jumpForce;
-        
     }
 
-    void onDestroy(){
+    private void flip(float xValue){
+        Vector3 theScale = transform.localScale;
+        if (xValue < 0)
+            theScale.x = Mathf.Abs(theScale.x) * -1;
+        else if (xValue > 0)
+            theScale.x = Mathf.Abs(theScale.x);
+
+        transform.localScale = theScale;
+    }
+
+    void OnDestroy(){
         obj = null;
     }
 }
