@@ -4,7 +4,7 @@ public class Enemy : MonoBehaviour
 {
     private Rigidbody2D rb;
 
-    public float movHor = 0f;
+    public float movHor = -1f; // Inicia andando para direita
     public float speed = 3f;
 
     public bool isGroundFloor = true;
@@ -23,24 +23,49 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (movHor == 0)
+        movHor = -1f;
     }
-    
+
     void Update()
     {
-       // Evitar cair no vazio
-        isGroundFloor = (Physics2D.Rycast(new Vector3(transform.position.x, traansform.position.y - floorCheckY, trnsform.position.z),
-        new Vector3(movHor, 0, 0), frontGrnRayDist, groundLayer));
+        // Evitar cair no vazio
+        isGroundFloor = (Physics2D.Raycast(
+            new Vector3(transform.position.x, transform.position.y - floorCheckY, transform.position.z),
+            new Vector2(movHor, 0), 
+            frontGrnRayDist, 
+            groundLayer
+        ));
 
-        if(isGroundFloor)
-        movHor = movHor * -1;
-       //Bater na parede
+        if (!isGroundFloor)
+            movHor = movHor * -1;
 
-       //Choque com outro inimigo
+        // Bater na parede
+        if (Physics2D.Raycast(transform.position, new Vector2(movHor, 0), frontCheck, groundLayer))
+            movHor = movHor * -1;
+
+        // Choque com outro inimigo
+        hit = Physics2D.Raycast(
+            new Vector3(transform.position.x + movHor * frontCheck, transform.position.y, transform.position.z),
+            new Vector2(movHor, 0),
+            frontDist
+        );
+
+        if (hit.collider != null && hit.transform.CompareTag("Enemy"))
+            movHor = movHor * -1;
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(movHor * speed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(movHor * speed, rb.linearVelocity.y); // Corrigido
+    }
+
+    void onCollisionEnter2D(Collision2D collision){
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        
     }
 
     private void getKilled()
